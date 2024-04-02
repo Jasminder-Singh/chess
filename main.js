@@ -56,8 +56,8 @@ placePieces('./assests/blackKnight.svg', false, 0, 1, "black", "knight", handleK
 placePieces('./assests/blackKnight.svg', false, 0, 6, "black", "knight", handleKnightMove);
 placePieces('./assests/blackKing.svg', false, 0, 4, "black", "king", handleKingMove);
 placePieces('./assests/blackQueen.svg', false, 0, 3, "black", "queen", handleQueenMove);
-placePieces('./assests/blackRook.svg', false, 0, 0, "black", "rook", handleKingMove);
-placePieces('./assests/blackRook.svg', false, 0, 7, "black", "rook", handleKingMove);
+placePieces('./assests/blackRook.svg', false, 0, 0, "black", "rook", handleRookMove);
+placePieces('./assests/blackRook.svg', false, 0, 7, "black", "rook", handleRookMove);
 placePieces('./assests/blackBishop.svg', false, 0, 2, "black", "bishop", handleKingMove);
 placePieces('./assests/blackBishop.svg', false, 0, 5, "black", "bishop", handleKingMove);
 
@@ -66,8 +66,8 @@ placePieces('./assests/whiteknight.svg', false, 7, 6, "white", "knight", handleK
 placePieces('./assests/whiteknight.svg', false, 7, 1, "white", "knight", handleKnightMove);
 placePieces('./assests/whiteKing.svg', false, 7, 4, "white", "king", handleKingMove);
 placePieces('./assests/whiteQueen.svg', false, 7, 3, "white", "queen", handleQueenMove);
-placePieces('./assests/whiteRook.svg', false, 7, 0, "white", "rook", handleKingMove);
-placePieces('./assests/whiteRook.svg', false, 7, 7, "white", "rook", handleKingMove);
+placePieces('./assests/whiteRook.svg', false, 7, 0, "white", "rook", handleRookMove);
+placePieces('./assests/whiteRook.svg', false, 7, 7, "white", "rook", handleRookMove);
 placePieces('./assests/whiteBishop.svg', false, 7, 2, "white", "bishop", handleKingMove);
 placePieces('./assests/whiteBishop.svg', false, 7, 5, "white", "bishop", handleKingMove);
 
@@ -778,6 +778,115 @@ function handleQueenMove(e) {
                 bottomVerticalRow = boardSize;
             } else {
                 bottomVerticalRow = boardSize;
+            }
+        }
+    }
+}
+
+function handleRookMove(e) {
+    const curr = e.target;
+    currSelectPiece = curr;
+    click.play();
+    removePrevSelectedMarks();
+    const parent = e.target.parentElement;
+    const row = parseInt(parent.id[0]);
+    const col = parseInt(parent.id[1]);
+
+    // Top move 
+    let topRow = row - 1;
+    for (; topRow >= 0; topRow--) {
+
+        if (isSafe(topRow, col)) {
+            const top = document.getElementById(`${topRow}${col}`);
+            if (!top.children[0]) {
+                top.classList.add('markBlue');
+                top.addEventListener('click', handleMoves);
+            } else if (top.children[0] && top.children[0].alt === 'white' && currSelectPiece.alt === 'black') {
+                top.classList.add('markRed');
+                top.children[0].style.pointerEvents = 'none';
+                top.addEventListener('click', handleRedMarkedPiece);
+                topRow = -1;
+            } else if (top.children[0] && top.children[0].alt === 'black' && currSelectPiece.alt === 'white') {
+                top.classList.add('markRed');
+                top.children[0].style.pointerEvents = 'none';
+                top.addEventListener('click', handleRedMarkedPiece);
+                topRow = -1;
+            } else {
+                topRow = -1;
+            }
+        }
+    }
+
+    // Right move 
+    let rightCol = col + 1;
+    for (; rightCol < boardSize; rightCol++) {
+
+        if (isSafe(row, rightCol)) {
+            const right = document.getElementById(`${row}${rightCol}`);
+
+            if (!right.children[0]) {
+                right.classList.add('markBlue');
+                right.addEventListener('click', handleMoves);
+            } else if (right.children[0] && right.children[0].alt === 'white' && currSelectPiece.alt === 'black') {
+                right.classList.add('markRed');
+                right.children[0].style.pointerEvents = 'none';
+                right.addEventListener('click', handleRedMarkedPiece);
+                rightCol = boardSize;
+            } else if (right.children[0] && right.children[0].alt === 'black' && currSelectPiece.alt === 'white') {
+                right.classList.add('markRed');
+                right.children[0].style.pointerEvents = 'none';
+                right.addEventListener('click', handleRedMarkedPiece);
+                rightCol = boardSize;
+            } else {
+                rightCol = boardSize;
+            }
+        }
+    }
+    // Bottom move 
+    let bottomRow = row + 1;
+    for (; bottomRow < boardSize; bottomRow++) {
+
+        if (isSafe(bottomRow, col)) {
+            const bottom = document.getElementById(`${bottomRow}${col}`);
+            if (!bottom.children[0]) {
+                bottom.classList.add('markBlue');
+                bottom.addEventListener('click', handleMoves);
+            } else if (bottom.children[0] && bottom.children[0].alt === 'white' && currSelectPiece.alt === 'black') {
+                bottom.classList.add('markRed');
+                bottom.children[0].style.pointerEvents = 'none';
+                bottom.addEventListener('click', handleRedMarkedPiece);
+                bottomRow = boardSize;
+            } else if (bottom.children[0] && bottom.children[0].alt === 'black' && currSelectPiece.alt === 'white') {
+                bottom.classList.add('markRed');
+                bottom.children[0].style.pointerEvents = 'none';
+                bottom.addEventListener('click', handleRedMarkedPiece);
+                bottomRow = boardSize;
+            } else {
+                bottomRow = boardSize;
+            }
+        }
+    }
+    // left move 
+    let leftCol = col - 1;
+    for (; leftCol >= 0; leftCol--) {
+
+        if (isSafe(row, leftCol)) {
+            const left = document.getElementById(`${row}${leftCol}`);
+            if (!left.children[0]) {
+                left.classList.add('markBlue');
+                left.addEventListener('click', handleMoves);
+            } else if (left.children[0] && left.children[0].alt === 'white' && currSelectPiece.alt === 'black') {
+                left.classList.add('markRed');
+                left.children[0].style.pointerEvents = 'none';
+                left.addEventListener('click', handleRedMarkedPiece);
+                leftCol = -1;
+            } else if (left.children[0] && left.children[0].alt === 'black' && currSelectPiece.alt === 'white') {
+                left.classList.add('markRed');
+                left.children[0].style.pointerEvents = 'none';
+                left.addEventListener('click', handleRedMarkedPiece);
+                leftCol = -1;
+            } else {
+                leftCol = -1;
             }
         }
     }
